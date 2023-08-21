@@ -1,0 +1,55 @@
+---
+- name: setup server
+  hosts: localhost
+  vars:
+    ssh_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCfrfE0OluoNHb5dOpV4RpWmVXvMBWc17kaM7DDjCm7romNQMDX95i5Fc67Q3c47pvrm/qi/ZqsCeqNdLl5+VV41rVz701Pj/UUr2FZpIm80Ur0iM1DFy81GKo/lS1INopqdd4KvUnM2d8yqfJSm9m5Cq7AM9S0mqObuMayfqNR4YcOlm9fnEMqhrSWbBVvdghPNiBzs7T9RzEq/0w8rs743tCF7MICv72fdgYadrGlxFsFWSujwZXQLI4VUSxKirJBCUgfR0u84gZK/wUzJ4EPqMichniTf24AsvidozUHWMDmQ+pUaBTyxjD5egi8LcV0EHH4feHwzacA2gyGbOtFK3wpa/dgE1yvPTkPKnccIXKnbel0mfxfsBVkclc5/DnczmrdaGrX5DCrQbI+HO4lhr4KzAm/pw6qfLcw8KjCdVKsnCRXykdat8KUwNAeolknRWdKDqdsbyXBj+ePMTlMR8YmoBj9znYWwOnAAyu56utiteL0oq9YPkb7ZGF5ZOE='
+    user: cloudru
+    password: $6$ra1n$nC0VLTzzdOLS3vknUKxRYDWBp2N2q2okhp3ARPuifOmfQOQ.J3GmP8jx9Mv7oITVrzABg4LqyUF6HA58FLr.k.
+  become: yes
+  gather_facts: no
+
+  tasks:
+
+    - name: install authorized_key module
+      shell: "ansible-galaxy collection install ansible.posix"
+
+    - name: create user cloudru with specified password
+      user:
+        name: "{{user}}"
+        password: "{{password}}" # запрошенный пароль с солью ra1n
+        create_home: yes
+
+    - name: check if openssh server is installed and if not, install it then
+      apt:
+        name: 'openssh-server'
+        state: present
+    
+    - name: disable any password methods on sshd
+      shell: 
+        cmd: |
+          cat <<EOF | sudo tee /etc/ssh/sshd_config.d/10-ansible-setup.conf
+          ChallengeResponseAuthentication no
+          PasswordAuthentication no
+          PermitRootLogin no
+          EOF
+
+    - name: run sshd by systemd
+      systemd:
+        name: sshd
+        enabled: yes
+        state: running
+    
+    - name: create .ssh directory
+      file:
+        path: /home/{{user}}/.ssh/
+        state: directory
+        owner: "{{user}}"
+        group: "{{user}}"
+        mode: 0755
+    
+    - name: set new public key for user cloudru # Честно, обратил внимание на потенциальную опечатку в последнем пункте задания, где сказано установить ключ юзеру cloudpass
+      ansible.posix.authorized_key:
+        state: present
+        key: "{{ssh_key}}"
+        user: "{{user}}"
+        

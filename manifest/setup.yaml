@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  labels:
+    app: test
+  namespace: devops
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: test
+        image: 2281548/devops_camp
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "50Mi"
+          limits:
+            cpu: "300m"
+            memory: "100Mi"
+        env:
+          - name: UUID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.uid
+        livenessProbe:
+          httpGet:
+            path: /hostname
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /id
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app
+  namespace: devops
+spec:
+  selector:
+    app: test
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
