@@ -37,7 +37,7 @@
       systemd:
         name: sshd
         enabled: yes
-        state: running
+        state: started
     
     - name: create .ssh directory
       file:
