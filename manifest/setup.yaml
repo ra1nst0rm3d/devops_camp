@@ -7,9 +7,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-app
+  namespace: devops
   labels:
     app: test
-  namespace: devops
 spec:
   replicas: 3
   selector:
@@ -62,5 +62,6 @@ spec:
     app: test
   ports:
   - name: http
+    protocol: TCP
     port: 8000
     targetPort: 8000
