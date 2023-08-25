@@ -37,6 +37,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.uid
+          - name: AUTHOR
+            value: ra1nst0rm3d # для безопасности укажу эту переменную, хотя про неё в задании ничего не сказано
         livenessProbe:
           httpGet:
             path: /hostname
