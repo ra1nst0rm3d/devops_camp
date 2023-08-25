@@ -43,13 +43,13 @@ spec:
           httpGet:
             path: /hostname
             port: 8000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 2
           periodSeconds: 3
         readinessProbe:
           httpGet:
             path: /id
             port: 8000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 2
           periodSeconds: 3
 
 ---
