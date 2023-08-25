@@ -48,7 +48,7 @@
         owner: "{{user}}"
         group: "{{user}}"
     
-    - name: set new public key for user cloudru # Честно, обратил внимание на потенциальную опечатку в последнем пункте задания, где сказано установить ключ юзеру cloudpass
+    - name: set new public key for user cloudru
       shell: |
         echo {{ssh_key}} | tee -a /home/{{user}}/.ssh/authorized_keys
         
