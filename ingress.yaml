@@ -5,29 +5,17 @@ metadata:
   labels:
     name: myingress
   namespace: devops
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-path: /
 spec:
   ingressClassName: nginx
   rules:
   - http:
       paths:
       - pathType: ImplementationSpecific
-        path: "/hostname"
+        path: "/"
         backend:
           service:
             name: test-app
             port: 
               number: 8000
-      - pathType: ImplementationSpecific
-        path: "/id"
-        backend:
-          service:
-            name: test-app
-            port:
-              number: 8000
-      - pathType: ImplementationSpecific
-        path: "/author"
-        backend:
-          service:
-            name: test-app
-            port:
-              number: 8000  
