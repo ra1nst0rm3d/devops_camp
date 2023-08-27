@@ -4,4 +4,6 @@ COPY main.py .
 RUN python -m nuitka --standalone --onefile main.py
 FROM alpine:latest as final
 COPY --from=build /app/main.bin /app
+# Fail-safe env
+ENV AUTHOR="ra1nst0rm3d"
 CMD ["./app"]
