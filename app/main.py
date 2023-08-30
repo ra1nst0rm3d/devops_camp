@@ -4,7 +4,15 @@ from os import getenv
 from functools import cached_property
 from urllib.parse import urlparse
 
+def get_env(key: str):
+    out = getenv(key)
+    if out == None:
+        return f'Failed to get {key}'
+    else:
+        return out
+
 class WebRequestHandler(BaseHTTPRequestHandler):
+    
     @cached_property
     def url(self):
         return urlparse(self.path)
@@ -15,21 +23,16 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         output = ""
         match self.url.path:
             case "/hostname":
-                output = gethostname()
+                self.wfile.write(gethostname().encode())
+                return
             case "/id":
-                output = getenv("UUID")
-                if output == None:
-                    self.wfile.write("Failed to get UUID!".encode())
-                    return
+                self.wfile.write(get_env("UUID").encode())
+                return
             case "/author":
-                output = getenv("AUTHOR")
-                if output == None:
-                    self.wfile.write("Failed to get author!".encode())
-                    return
+                self.wfile.write(get_env("AUTHOR").encode())
             case _:
                 self.wfile.write("You hit wrong path!".encode())
                 return
-        self.wfile.write(output.encode())
         return
         
         
