@@ -22,3 +22,7 @@ P.S. Я тут засомневался в неоходимости указан
 [ra1n@RyzenLaptop helm]$ helm create test
 ```
 и подогнан к предыдущему манифесту, ничего сверхъестественного :)
+Непосредственно, запуск:
+```console
+[ra1n@RyzenLaptop helm]$ helm install test test/
+```
