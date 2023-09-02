@@ -7,6 +7,8 @@ metadata:
   namespace: devops
   annotations:
     nginx.ingress.kubernetes.io/rewrite-path: /
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
 spec:
   ingressClassName: nginx
   rules:
