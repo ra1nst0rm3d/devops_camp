@@ -1,24 +1,6 @@
 ---
-- name: check system
-  hosts: servers
-  gather_facts: yes
-
-  tasks:
-
-    - name: Assert that we running on Ubuntu
-      assert:
-        that:
-          ansible_facts["distribution"] == 'Ubuntu'
-        fail_msg: "We don't running under Ubuntu"
-
-    - name: Assert that we running on 22.04.3 release
-      assert:
-        that:
-          ansible_facts["distribution_version"] == '22.04.3'
-        fail_msg: 'Ubuntu release is not 22.04.3'
-
 - name: setup server
-  hosts: servers
+  hosts: all
   vars_files:
     - "vars/main.yaml"
   become: yes
@@ -26,6 +8,19 @@
 
   tasks:
 
+
+    - name: Assert that we running on Ubuntu
+      assert:
+        that:
+          ansible_facts["distribution"] == 'Ubuntu'
+        fail_msg: "We don't running under Ubuntu"
+
+    - name: Assert that we running on 22.04 release
+      assert:
+        that:
+          ansible_facts["distribution_version"] == '22.04'
+        fail_msg: 'Ubuntu release is not 22.04'
+      
     - name: create user cloudru with specified password
       user:
         name: "{{user}}"
