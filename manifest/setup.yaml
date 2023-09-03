@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: test
-        image: 2281548/devops_camp:latest
+        image: docker.io/2281548/devops_camp:latest
         ports:
         - containerPort: 8000
         resources:
