@@ -3,5 +3,5 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 3
-imageName: 2281548/devops_camp:latest
+imageName: docker.io/2281548/devops_camp:latest
 authorName: ra1nst0rm3d
