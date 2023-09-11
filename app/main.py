@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from socket import gethostname
 from os import getenv
 from functools import cached_property
 from urllib.parse import urlparse
+from uuid import UUID
 
 def get_env(key: str):
     out = getenv(key)
@@ -18,21 +18,31 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         return urlparse(self.path)
     
     def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        output = ""
         match self.url.path:
             case "/hostname":
-                self.wfile.write(gethostname().encode())
-                return
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(get_env("HOSTNAME").encode())
             case "/id":
-                self.wfile.write(get_env("UUID").encode())
-                return
+                # Check UUID for UUIDv4
+                uuid = get_env("UUID")
+                try:
+                    UUID(str(uuid), version=4)
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(uuid.encode())
+                except ValueError:
+                    self.send_response_only(409)
+                    self.end_headers()
             case "/author":
+                self.send_response(200)
+                self.end_headers()
                 self.wfile.write(get_env("AUTHOR").encode())
             case _:
+                self.send_response(400)
+                self.end_headers()
                 self.wfile.write("You hit wrong path!".encode())
-                return
+        
         return
         
         
