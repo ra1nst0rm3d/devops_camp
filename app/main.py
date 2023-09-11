@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from os import getenv
+from os import getenv, uname
 from functools import cached_property
 from urllib.parse import urlparse
 from uuid import UUID
@@ -22,7 +22,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
             case "/hostname":
                 self.send_response(200)
                 self.end_headers()
-                self.wfile.write(get_env("HOSTNAME").encode())
+                self.wfile.write(uname()[1].encode())
             case "/id":
                 # Check UUID for UUIDv4
                 uuid = get_env("UUID")
