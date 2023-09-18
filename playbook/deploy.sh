@@ -1,2 +1,2 @@
 #!/bin/bash
-ansible-playbook setup.yaml -i inventory --ask-become-pass --vault-password-file pwd
+ansible-playbook setup.yaml -i inventory --vault-password-file pwd
